@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import DashboardLayout from './layouts/DashboardLayout';
+
+// Pages
+import Login from './pages/Auth/Login';
+import Signup from './pages/Auth/Signup';
+import Dashboard from './pages/Dashboard';
+import Kyc from './pages/Kyc';
+import BookingHistory from './pages/BookingHistory';
+import Wallet from './pages/Wallet';
+import Passbook from './pages/Passbook';
+import Schedule from './pages/Schedule';
+import Reviews from './pages/Reviews';
+
+// Placeholder components
+const MyProfile = () => <div><h2>My Profile</h2><p>Integrated Version Coming Soon...</p></div>;
+const MyServices = () => <div><h2>My Services</h2><p>Coming Soon...</p></div>;
+const Earnings = () => <div><h2>Earnings Analytics</h2><p>Coming Soon...</p></div>;
+const Support = () => <div><h2>Support & Help</h2><p>Coming Soon...</p></div>;
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <AuthProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Protected Routes inside Layout */}
+          <Route 
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Navigate to="/" replace />} />
+            <Route path="/kyc" element={<Kyc />} />
+            <Route path="/bookings/history" element={<BookingHistory />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/passbook" element={<Passbook />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/profile" element={<MyProfile />} />
+            <Route path="/services" element={<MyServices />} />
+            <Route path="/earnings" element={<Earnings />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/support" element={<Support />} />
+          </Route>
+          
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,130 @@
+.reviews-page {
+  width: 100%;
+}
+
+.overall-rating-badge {
+  background: white;
+  padding: 12px 24px;
+  border-radius: 100px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.rating-val {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.rating-count {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.reviews-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
+}
+
+.review-card {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-color: #7B61FF;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.user-info-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-info-row img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.u-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.u-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.u-date {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.service-tag {
+  display: inline-block;
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.review-text {
+  color: #334155;
+  font-size: 15px;
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+.review-footer {
+  display: flex;
+  gap: 16px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 20px;
+}
+
+.review-action-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.review-action-btn:hover {
+  color: #7B61FF;
+}
+
+@media (max-width: 500px) {
+  .reviews-list {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,78 @@
+.services-page {
+  width: 100%;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.service-card {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: all 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border-color: #7B61FF;
+}
+
+.service-card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-tag {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-tag.active { background-color: #ecfdf5; color: #10b981; }
+.status-tag.inactive { background-color: #f1f5f9; color: #64748b; }
+
+.category-tag {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.service-card-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.price-tag {
+  font-size: 24px;
+  font-weight: 800;
+  color: #7B61FF;
+}
+
+.service-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.text-red {
+  color: #ef4444 !important;
+}
+
+.text-red:hover {
+  background-color: #fef2f2 !important;
+}

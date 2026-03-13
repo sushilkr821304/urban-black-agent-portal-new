@@ -1,0 +1,131 @@
+.wallet-page {
+  width: 100%;
+}
+
+.wallet-header {
+  background-color: #7B61FF;
+  color: white;
+  padding: 24px 48px;
+  margin: -32px -48px 32px -48px;
+}
+
+.wallet-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.wallet-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 0;
+}
+
+.wallet-main-card {
+  background: white;
+  border-radius: 24px;
+  display: flex;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
+  min-height: 180px;
+}
+
+.wallet-info-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  border-right: 1px solid #f3f4f6;
+}
+
+.wallet-icon-large {
+  width: 100px;
+  height: 100px;
+  background-color: #f5f3ff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7B61FF;
+}
+
+.balance-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.balance-amount {
+  font-size: 40px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.balance-label {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.wallet-action-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 40px;
+}
+
+.add-money-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+  background: linear-gradient(135deg, #ff5a8d 0%, #e11d48 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(255, 90, 141, 0.2);
+}
+
+.add-money-btn:hover {
+  background-color: #f43f5e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 90, 141, 0.3);
+}
+
+.transactions-section {
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
+}
+
+.transactions-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  color: #7c3aed;
+}
+
+.transactions-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.empty-transactions {
+  padding: 40px 0;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 16px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: 24px;
+}

@@ -1,0 +1,191 @@
+.schedule-page {
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.header-text h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.header-text p {
+  color: #64748b;
+  font-size: 15px;
+}
+
+.primary-btn-s {
+  background: linear-gradient(135deg, #7B61FF 0%, #9333EA 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3);
+}
+
+.calendar-strip-card {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 32px;
+}
+
+.strip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dates-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.date-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.date-cell:hover {
+  background-color: #f8fafc;
+}
+
+.date-cell.active {
+  background-color: #7B61FF;
+  border-color: #7B61FF;
+  color: white;
+  box-shadow: 0 8px 16px rgba(123, 97, 255, 0.25);
+}
+
+.d-day {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.d-date {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.slots-container {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+}
+
+.l-item {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.l-item::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.l-item.av::before { background-color: #10b981; }
+.l-item.bk::before { background-color: #f1f5f9; border: 1px solid #e2e8f0; }
+
+.slots-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slot-card {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  transition: all 0.2s;
+}
+
+.slot-card.available { border-left: 4px solid #10b981; }
+.slot-card.booked { border-left: 4px solid #94a3b8; background-color: #f8fafc; }
+
+.slot-time {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 120px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.slot-info {
+  flex: 1;
+}
+
+.status-label {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.booking-name {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.slot-action {
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slot-action:hover {
+  background-color: #f1f5f9;
+}
