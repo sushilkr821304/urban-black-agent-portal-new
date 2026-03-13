@@ -122,4 +122,21 @@ public class AuthController {
         User user = userRepository.findByPhoneNumber(authentication.getName()).get();
         return ResponseEntity.ok(user);
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody java.util.Map<String, String> request, Authentication authentication) {
+        String currentPassword = request.get("currentPassword");
+        String newPassword = request.get("newPassword");
+        
+        User user = userRepository.findByPhoneNumber(authentication.getName()).get();
+        
+        if (!encoder.matches(currentPassword, user.getPassword())) {
+            return ResponseEntity.badRequest().body(java.util.Collections.singletonMap("message", "Incorrect current password"));
+        }
+        
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+        
+        return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Password updated successfully"));
+    }
 }

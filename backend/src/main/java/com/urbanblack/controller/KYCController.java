@@ -26,8 +26,8 @@ public class KYCController {
     @Autowired
     AgentRepository agentRepository;
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Autowired
+    com.urbanblack.service.CloudinaryService cloudinaryService;
 
     @PostMapping("/submit")
     public ResponseEntity<?> submitKyc(
@@ -61,9 +61,9 @@ public class KYCController {
         kyc.setState(state);
         kyc.setKycStatus("In Progress");
 
-        if (aadharFront != null) kyc.setAadharFrontImage(saveFile(aadharFront));
-        if (aadharBack != null) kyc.setAadharBackImage(saveFile(aadharBack));
-        if (panCard != null) kyc.setPanImage(saveFile(panCard));
+        if (aadharFront != null && !aadharFront.isEmpty()) kyc.setAadharFrontImage(cloudinaryService.uploadFile(aadharFront, "kyc/aadhar"));
+        if (aadharBack != null && !aadharBack.isEmpty()) kyc.setAadharBackImage(cloudinaryService.uploadFile(aadharBack, "kyc/aadhar"));
+        if (panCard != null && !panCard.isEmpty()) kyc.setPanImage(cloudinaryService.uploadFile(panCard, "kyc/pan"));
 
         agent.setKyc(kyc);
         agentRepository.save(agent);
@@ -81,13 +81,4 @@ public class KYCController {
         return ResponseEntity.ok(agent.getKyc());
     }
 
-    private String saveFile(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path path = Paths.get(uploadPath + "/kyc");
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-        }
-        Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-        return "uploads/kyc/" + fileName;
-    }
 }

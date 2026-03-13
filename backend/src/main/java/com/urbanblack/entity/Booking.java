@@ -24,6 +24,7 @@ public class Booking {
     private LocalDateTime date;
     private Double amount;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @ManyToOne
     @JoinColumn(name = "agent_id")
     private Agent agent;

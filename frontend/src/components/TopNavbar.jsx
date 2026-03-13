@@ -1,11 +1,14 @@
-import React from 'react';
-import { Search, Wallet, ChevronDown, Menu, Bell } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, Wallet, ChevronDown, Menu, Bell, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useWallet } from '../context/WalletContext';
 import './TopNavbar.css';
 
 const TopNavbar = ({ onToggleSidebar, isSidebarClosed }) => {
-  const { user } = useAuth();
-  const agentName = user?.agent?.name || 'Agent';
+  const { user, logout } = useAuth();
+  const { balance } = useWallet();
+
+  const mobileNumber = user?.phoneNumber || user?.username || 'N/A';
 
   return (
     <div className="top-navbar">
@@ -27,7 +30,7 @@ const TopNavbar = ({ onToggleSidebar, isSidebarClosed }) => {
           </div>
           <div className="wallet-details">
             <span className="w-label">Balance</span>
-            <span className="w-amount">₹{user?.agent?.wallet?.balance?.toLocaleString() || '0'}</span>
+            <span className="w-amount">₹{balance?.toLocaleString() || '0'}</span>
           </div>
           <ChevronDown size={14} className="w-dropdown" />
         </div>
@@ -37,13 +40,24 @@ const TopNavbar = ({ onToggleSidebar, isSidebarClosed }) => {
           <span className="bell-badge"></span>
         </div>
 
-        <div className="profile-section-v2">
-          <div className="profile-info">
-            <span className="profile-name">{agentName}</span>
-            <span className="profile-role">Verified Agent</span>
+        <div className="simple-profile-section">
+          <div className="nav-profile-avatar">
+            {user?.agent?.profilePhoto ? (
+              <img 
+                src={user.agent.profilePhoto.startsWith('http') ? user.agent.profilePhoto : `http://localhost:8080/${user.agent.profilePhoto}`} 
+                alt="Profile" 
+              />
+            ) : (
+              <span className="avatar-initials">
+                {user?.agent?.name?.charAt(0) || mobileNumber.charAt(0) || 'A'}
+              </span>
+            )}
           </div>
-          <div className="profile-avatar-v2">
-            <img src={`https://ui-avatars.com/api/?name=${agentName}&background=6C2BD9&color=fff`} alt="Profile" />
+          <div className="nav-profile-info">
+            <span className="agent-mobile-number">{mobileNumber}</span>
+            <button className="minimal-logout-btn" onClick={logout}>
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </div>

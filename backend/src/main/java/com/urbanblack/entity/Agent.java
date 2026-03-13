@@ -31,6 +31,23 @@ public class Agent {
     @Builder.Default
     private Double monthlyEarnings = 0.0;
 
+    private String dob;
+    private String gender;
+    private String address;
+    private String city;
+    private String state;
+    private String pincode;
+    
+    // New Professional Fields
+    private String alternateMobile;
+    private Integer experienceYears;
+    private String specialization;
+    private String education;
+    private String languages;
+
+    @Builder.Default
+    private java.time.LocalDateTime createdAt = java.time.LocalDateTime.now();
+
     @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")

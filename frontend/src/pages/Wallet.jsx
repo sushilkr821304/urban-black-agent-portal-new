@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { createPaymentOrder, verifyPaymentSignature, getWalletBalance, getMyPayments } from '../services/paymentService';
 import toast from 'react-hot-toast';
+import { useWallet } from '../context/WalletContext';
 
 const Wallet = () => {
-  const [balance, setBalance] = useState(0);
+  const { balance, setBalance, refreshBalance } = useWallet();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,11 +15,10 @@ const Wallet = () => {
 
   const fetchWalletData = async () => {
     try {
-      const [newBalance, newTransactions] = await Promise.all([
-        getWalletBalance(),
+      const [newTransactions] = await Promise.all([
         getMyPayments()
       ]);
-      setBalance(newBalance);
+      await refreshBalance();
       setTransactions(newTransactions);
     } catch (error) {
       console.error('Error fetching wallet data:', error);

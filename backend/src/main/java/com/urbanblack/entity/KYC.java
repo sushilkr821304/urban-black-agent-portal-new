@@ -29,6 +29,11 @@ public class KYC {
     @Builder.Default
     private String kycStatus = "Pending"; // Pending, In Progress, Completed, Rejected
 
+    @Builder.Default
+    private java.time.LocalDateTime submittedAt = java.time.LocalDateTime.now();
+    private java.time.LocalDateTime verifiedAt;
+
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToOne
     @JoinColumn(name = "agent_id")
     private Agent agent;

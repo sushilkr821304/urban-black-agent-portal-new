@@ -1,66 +1,78 @@
 package com.urbanblack.controller;
 
+import com.urbanblack.dto.DashboardStatsResponse;
+import com.urbanblack.entity.ActivityLog;
 import com.urbanblack.entity.Agent;
 import com.urbanblack.entity.Booking;
 import com.urbanblack.entity.User;
-import com.urbanblack.repository.AgentRepository;
-import com.urbanblack.repository.BookingRepository;
 import com.urbanblack.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.urbanblack.service.DashboardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/dashboard")
+@RequiredArgsConstructor
 public class DashboardController {
 
-    @Autowired
-    UserRepository userRepository;
+    private final DashboardService dashboardService;
+    private final UserRepository userRepository;
 
-    @Autowired
-    AgentRepository agentRepository;
-
-    @Autowired
-    BookingRepository bookingRepository;
-
-    @GetMapping("/stats")
-    public ResponseEntity<?> getStats(Authentication authentication) {
-        String phoneNumber = authentication.getName();
-        User user = userRepository.findByPhoneNumber(phoneNumber).get();
-        Agent agent = agentRepository.findByUserId(user.getId()).get();
-
-        List<Booking> recentBookings = bookingRepository.findByAgentIdOrderByDateDesc(agent.getId());
-        if (recentBookings.size() > 5) {
-            recentBookings = recentBookings.subList(0, 5);
+    private Agent getCurrentAgent() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
         }
-
-        Map<String, Object> response = new HashMap<>();
-        
-        List<Map<String, Object>> stats = new ArrayList<>();
-        stats.add(createStat("Total Bookings", agent.getTotalBookings().toString(), "+12%", "#6C2BD9"));
-        stats.add(createStat("Completed Jobs", agent.getCompletedJobs().toString(), "+8%", "#10B981"));
-        stats.add(createStat("Pending Requests", agent.getPendingRequests().toString(), "-2%", "#F59E0B"));
-        stats.add(createStat("Monthly Earnings", "₹" + agent.getMonthlyEarnings(), "+15%", "#EC4899"));
-        stats.add(createStat("Wallet Balance", "₹" + (agent.getWallet() != null ? agent.getWallet().getBalance() : 0), null, "#3B82F6"));
-        stats.add(createStat("Customer Rating", agent.getRating().toString(), "Top 5%", "#F59E0B"));
-
-        response.put("stats", stats);
-        response.put("recentBookings", recentBookings);
-        response.put("kycStatus", agent.getKyc() != null ? agent.getKyc().getKycStatus() : "Pending");
-
-        return ResponseEntity.ok(response);
+        User user = userRepository.findByPhoneNumber(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getAgent();
     }
 
-    private Map<String, Object> createStat(String title, String value, String trend, String color) {
-        Map<String, Object> stat = new HashMap<>();
-        stat.put("title", title);
-        stat.put("value", value);
-        stat.put("trend", trend);
-        stat.put("color", color);
-        return stat;
+    @GetMapping("/stats")
+    public ResponseEntity<DashboardStatsResponse> getStats() {
+        return ResponseEntity.ok(dashboardService.getStats(getCurrentAgent()));
+    }
+
+    @GetMapping("/recent-bookings")
+    public ResponseEntity<List<Booking>> getRecentBookings() {
+        return ResponseEntity.ok(dashboardService.getRecentBookings(getCurrentAgent()));
+    }
+
+    @GetMapping("/activities")
+    public ResponseEntity<List<ActivityLog>> getActivities() {
+        return ResponseEntity.ok(dashboardService.getRecentActivities(getCurrentAgent()));
+    }
+
+    @GetMapping("/analytics")
+    public ResponseEntity<Map<String, Object>> getAnalytics() {
+        Agent agent = getCurrentAgent();
+        DashboardStatsResponse stats = dashboardService.getStats(agent);
+        
+        Map<String, Object> analytics = new HashMap<>();
+        
+        // Booking Distribution
+        Map<String, Long> distribution = new HashMap<>();
+        distribution.put("Completed", stats.getCompletedBookings());
+        distribution.put("Pending", stats.getPendingBookings());
+        distribution.put("Cancelled", stats.getCancelledBookings());
+        analytics.put("distribution", distribution);
+        
+        // Mock Revenue Data (Weekly/Monthly)
+        analytics.put("revenueLabels", List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun"));
+        analytics.put("revenueData", List.of(12000, 15000, 8000, 22000, 18000, 25000));
+        
+        return ResponseEntity.ok(analytics);
     }
 }

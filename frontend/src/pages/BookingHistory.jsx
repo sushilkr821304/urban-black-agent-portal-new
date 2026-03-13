@@ -39,8 +39,8 @@ const BookingHistory = () => {
   };
 
   const filteredBookings = bookings.filter(b => {
-    const matchesSearch = b.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          b.customer.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (b.bookingId || b.id || "").toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          (b.customerName || b.customer || "").toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filter === 'All' || b.status === filter;
     return matchesSearch && matchesFilter;
   });
@@ -114,11 +114,11 @@ const BookingHistory = () => {
                 </tr>
               ) : (
                 filteredBookings.map((bk, i) => (
-                  <tr key={bk.id} style={{ borderBottom: i === filteredBookings.length - 1 ? 'none' : '1px solid var(--border-color)', transition: 'background 0.2s', ':hover': { background: '#F9FAFB' } }}>
-                    <td style={{ padding: '16px 24px', fontWeight: '600' }}>{bk.id}</td>
-                    <td style={{ padding: '16px 24px' }}>{bk.customer}</td>
-                    <td style={{ padding: '16px 24px' }}>{bk.route}</td>
-                    <td style={{ padding: '16px 24px' }}>{bk.date}</td>
+                   <tr key={bk.id} style={{ borderBottom: i === filteredBookings.length - 1 ? 'none' : '1px solid var(--border-color)', transition: 'background 0.2s' }}>
+                    <td style={{ padding: '16px 24px', fontWeight: '600' }}>{bk.bookingId || bk.id}</td>
+                    <td style={{ padding: '16px 24px' }}>{bk.customerName || bk.customer}</td>
+                    <td style={{ padding: '16px 24px' }}>{bk.serviceType || bk.route}</td>
+                    <td style={{ padding: '16px 24px' }}>{bk.date ? new Date(bk.date).toLocaleDateString() : 'N/A'}</td>
                     <td style={{ padding: '16px 24px' }}>
                       <span style={{ 
                         padding: '4px 10px', 
@@ -131,7 +131,7 @@ const BookingHistory = () => {
                         {bk.status}
                       </span>
                     </td>
-                    <td style={{ padding: '16px 24px', fontWeight: '600', color: 'var(--text-main)' }}>₹{bk.amount}</td>
+                    <td style={{ padding: '16px 24px', fontWeight: '600', color: 'var(--text-main)' }}>₹{bk.amount?.toLocaleString()}</td>
                   </tr>
                 ))
               )}

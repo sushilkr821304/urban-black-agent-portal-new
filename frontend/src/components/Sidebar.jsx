@@ -4,18 +4,19 @@ import { useAuth } from '../context/AuthContext';
 import { 
   LayoutDashboard, 
   User, 
-  Wrench, 
   CalendarCheck, 
   Calendar, 
   CircleDollarSign, 
   Wallet, 
-  History, 
-  FileCheck, 
   LogOut,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  UserPlus,
+  FileText,
+  HelpCircle,
   ShieldCheck,
-  ChevronDown
+  FileCheck
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -32,15 +33,17 @@ const Sidebar = ({ isOpen, onToggle }) => {
       icon: <ShieldCheck size={20} />, 
       isSubmenu: true, 
       subItems: [
-        { name: 'KYC', icon: <FileCheck size={18} />, path: '/kyc' }
+        { name: 'KYC Verification', icon: <FileCheck size={18} />, path: '/kyc' },
+        { name: 'Profile Details', icon: <User size={18} />, path: '/profile' }
       ] 
     },
-    { name: 'My Services', icon: <Wrench size={20} />, path: '/services' },
     { name: 'Bookings', icon: <CalendarCheck size={20} />, path: '/bookings/history' },
     { name: 'Schedule', icon: <Calendar size={20} />, path: '/schedule' },
-    { name: 'Earnings', icon: <CircleDollarSign size={20} />, path: '/earnings' },
+    { name: 'Customers', icon: <UserPlus size={20} />, path: '/customers' },
     { name: 'Wallet', icon: <Wallet size={20} />, path: '/wallet' },
-    { name: 'Passbook', icon: <History size={20} />, path: '/passbook' },
+    { name: 'Earnings', icon: <CircleDollarSign size={20} />, path: '/earnings' },
+    { name: 'Reports', icon: <FileText size={20} />, path: '/reports' },
+    { name: 'Support', icon: <HelpCircle size={20} />, path: '/support' },
   ];
 
   const bottomItems = [
@@ -64,7 +67,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
           item.isSubmenu ? (
             <div key={item.name} className={`submenu-wrapper ${accountOpen ? 'expanded' : ''}`}>
               <div 
-                className={`nav-item ${currentPath.includes(item.path) ? 'active' : ''}`}
+                className={`nav-item ${item.subItems.some(sub => currentPath === sub.path) ? 'active' : ''}`}
                 onClick={() => setAccountOpen(!accountOpen)}
                 style={{ cursor: 'pointer' }}
               >
