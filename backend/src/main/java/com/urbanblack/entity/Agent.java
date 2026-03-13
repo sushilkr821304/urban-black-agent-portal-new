@@ -31,6 +31,7 @@ public class Agent {
     @Builder.Default
     private Double monthlyEarnings = 0.0;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

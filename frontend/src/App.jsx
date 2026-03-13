@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
+import { Toaster } from 'react-hot-toast';
 
 // Pages
 import Login from './pages/Auth/Login';
@@ -25,6 +26,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
+        <Toaster position="top-right" reverseOrder={false} />
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />

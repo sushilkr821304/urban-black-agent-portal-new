@@ -17,6 +17,7 @@ public class Wallet {
     @Builder.Default
     private Double balance = 0.0;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToOne
     @JoinColumn(name = "agent_id")
     private Agent agent;
