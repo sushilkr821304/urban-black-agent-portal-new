@@ -14,7 +14,7 @@ const Earnings = () => {
           <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'var(--text-muted)' }}>Total Earnings</h3>
           <p style={{ margin: 0, fontSize: '32px', fontWeight: 'bold', color: 'var(--primary)' }}>₹ 1,45,000</p>
         </motion.div>
-        
+
         <motion.div className="premium-card" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'var(--text-muted)' }}>Weekly Earnings</h3>
           <p style={{ margin: 0, fontSize: '32px', fontWeight: 'bold', color: 'var(--text-main)' }}>₹ 12,400</p>
@@ -33,6 +33,36 @@ const Earnings = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+export default Earnings;
+                ))}
+              </tbody >
+            </table >
+          </div >
+        </motion.div >
+
+  <motion.div className="glass-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
+    <div className="card-title">Wallet Ledger</div>
+    <div className="trans-scroll">
+      {transactions.map((t) => (
+        <div className="trans-item" key={t.id}>
+          <div className={`t-icon ${t.type.toLowerCase()}`}>
+            <Award size={20} />
+          </div>
+          <div className="t-details">
+            <div className="t-desc">{t.description}</div>
+            <div className="t-date">{new Date(t.date).toLocaleDateString()} at {new Date(t.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+          <div className="t-amount">+₹{t.amount}</div>
+        </div>
+      ))}
+      {transactions.length === 0 && <div className="no-data">No transactions recorded</div>}
+    </div>
+  </motion.div>
+      </div >
+    </motion.div >
   );
 };
 

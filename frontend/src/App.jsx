@@ -17,6 +17,7 @@ import Wallet from './pages/Wallet';
 import Passbook from './pages/Passbook';
 import Schedule from './pages/Schedule';
 import Reviews from './pages/Reviews';
+import Customers from './pages/Customers';
 const MyServices = () => <div><h2>My Services</h2><p>Coming Soon...</p></div>;
 const Earnings = () => <div><h2>Earnings Analytics</h2><p>Coming Soon...</p></div>;
 const Support = () => <div><h2>Support & Help</h2><p>Coming Soon...</p></div>;
@@ -33,7 +34,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
 
             {/* Protected Routes inside Layout */}
-            <Route 
+            <Route
               element={
                 <ProtectedRoute>
                   <DashboardLayout />
@@ -44,6 +45,7 @@ function App() {
               <Route path="/dashboard" element={<Navigate to="/" replace />} />
               <Route path="/kyc" element={<Kyc />} />
               <Route path="/bookings/history" element={<BookingHistory />} />
+              <Route path="/customers" element={<Customers />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/passbook" element={<Passbook />} />
               <Route path="/schedule" element={<Schedule />} />
@@ -53,7 +55,7 @@ function App() {
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/support" element={<Support />} />
             </Route>
-            
+
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

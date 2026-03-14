@@ -27,7 +27,9 @@ public class DashboardService {
         
         long todayBookings = bookingRepository.findRecentByAgentId(agentId, todayStart).size();
         long totalBookings = bookingRepository.countByAgentId(agentId);
-        long pendingBookings = bookingRepository.countByAgentIdAndStatus(agentId, "Pending");
+        long upcomingBookings = bookingRepository.countByAgentIdAndStatus(agentId, "Upcoming");
+        long assignedBookings = bookingRepository.countByAgentIdAndStatus(agentId, "Assigned");
+        long inProgressBookings = bookingRepository.countByAgentIdAndStatus(agentId, "In Progress");
         long completedBookings = bookingRepository.countByAgentIdAndStatus(agentId, "Completed");
         long cancelledBookings = bookingRepository.countByAgentIdAndStatus(agentId, "Cancelled");
         
@@ -40,7 +42,7 @@ public class DashboardService {
                 .totalBookings(totalBookings)
                 .overallEarnings(totalEarnings != null ? totalEarnings : 0.0)
                 .todayCommission(todayBookings * 50.0) // Mock commission logic
-                .pendingBookings(pendingBookings)
+                .pendingBookings(upcomingBookings + assignedBookings + inProgressBookings)
                 .completedBookings(completedBookings)
                 .cancelledBookings(cancelledBookings)
                 .build();

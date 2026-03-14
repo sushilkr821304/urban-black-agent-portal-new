@@ -72,6 +72,8 @@ const Dashboard = () => {
   const statusColors = {
     'Completed': { bg: 'rgba(16, 185, 129, 0.1)', text: '#10B981' },
     'In Progress': { bg: 'rgba(59, 130, 246, 0.1)', text: '#3B82F6' },
+    'Upcoming': { bg: 'rgba(245, 158, 11, 0.1)', text: '#F59E0B' },
+    'Assigned': { bg: 'rgba(79, 70, 229, 0.1)', text: '#4F46E5' },
     'Pending': { bg: 'rgba(245, 158, 11, 0.1)', text: '#F59E0B' },
     'Cancelled': { bg: 'rgba(239, 68, 68, 0.1)', text: '#EF4444' }
   };
@@ -79,12 +81,15 @@ const Dashboard = () => {
   if (loading && !stats) return <div className="loading-container">Loading Dashboard...</div>;
 
   const distributionData = [
-    { name: 'Completed', value: stats?.completedBookings || 230, color: '#10B981' },
-    { name: 'Pending', value: stats?.pendingBookings || 4, color: '#F59E0B' },
-    { name: 'Cancelled', value: stats?.cancelledBookings || 15, color: '#EF4444' },
+    { name: 'Completed', value: stats?.completedBookings || 0, color: '#10B981' },
+    { name: 'Active', value: stats?.pendingBookings || 0, color: '#F59E0B' },
+    { name: 'Cancelled', value: stats?.cancelledBookings || 0, color: '#EF4444' },
   ];
 
-  const revenueData = [
+  const revenueData = analytics?.revenueLabels?.map((label, i) => ({
+    month: label,
+    revenue: analytics.revenueData[i]
+  })) || [
     { month: 'Jan', revenue: 12000 },
     { month: 'Feb', revenue: 15000 },
     { month: 'Mar', revenue: 8000 },
@@ -110,7 +115,9 @@ const Dashboard = () => {
                 className="banner-avatar-img"
               />
             ) : (
-              <User size={32} color="white" />
+              <div className="banner-avatar-initials">
+                {user?.agent?.name?.split(' ').map(n => n[0]).join('') || 'A'}
+              </div>
             )}
           </div>
           <div>
@@ -158,9 +165,9 @@ const Dashboard = () => {
           </div>
           <div className="card-content">
             <p className="card-label">Today's Bookings</p>
-            <h2 className="card-value">{stats?.todayBookings}</h2>
+            <h2 className="card-value">{stats?.todayBookings || 0}</h2>
             <div className="trend-row up">
-              <TrendingUp size={14} /> <span>Commission: ₹{stats?.todayCommission}</span>
+              <TrendingUp size={14} /> <span>Commission: ₹{stats?.todayCommission || 0}</span>
             </div>
           </div>
         </motion.div>
@@ -172,10 +179,10 @@ const Dashboard = () => {
           </div>
           <div className="card-content">
             <p className="card-label">Total Bookings</p>
-            <h2 className="card-value">{stats?.totalBookings}</h2>
+            <h2 className="card-value">{stats?.totalBookings || 0}</h2>
             <div className="booking-breakdown">
-              <span className="br-item"><span className="dot green"></span> {stats?.completedBookings} Done</span>
-              <span className="br-item"><span className="dot yellow"></span> {stats?.pendingBookings} Pend.</span>
+              <span className="br-item"><span className="dot green"></span> {stats?.completedBookings || 0} Done</span>
+              <span className="br-item"><span className="dot yellow"></span> {stats?.pendingBookings || 0} Pend.</span>
             </div>
           </div>
         </motion.div>
@@ -187,15 +194,15 @@ const Dashboard = () => {
           </div>
           <div className="card-content">
             <p className="card-label">Overall Earnings</p>
-            <h2 className="card-value">₹{stats?.overallEarnings?.toLocaleString()}</h2>
+            <h2 className="card-value">₹{stats?.overallEarnings?.toLocaleString() || 0}</h2>
             <div className="earning-mini-grid">
               <div>
                 <span className="mini-lbl">Today</span>
-                <span className="mini-val">₹{stats?.todayCommission}</span>
+                <span className="mini-val">₹{stats?.todayCommission || 0}</span>
               </div>
               <div>
                 <span className="mini-lbl">This Month</span>
-                <span className="mini-val">₹32,500</span>
+                <span className="mini-val">₹{(stats?.overallEarnings || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -206,11 +213,11 @@ const Dashboard = () => {
       <div className="quick-actions-bar">
         <h3 className="section-title">Quick Actions</h3>
         <div className="actions-grid">
-          <button className="action-item" onClick={() => navigate('/bookings/new')}>
+          <button className="action-item" onClick={() => navigate('/bookings/history')}>
             <div className="action-icon"><Plus size={20} /></div>
             <span>New Booking</span>
           </button>
-          <button className="action-item" onClick={() => navigate('/search')}>
+          <button className="action-item" onClick={() => navigate('/bookings/history')}>
             <div className="action-icon"><MapPin size={20} /></div>
             <span>Search Route</span>
           </button>
@@ -218,11 +225,11 @@ const Dashboard = () => {
             <div className="action-icon"><Car size={20} /></div>
             <span>Book Cab</span>
           </button>
-          <button className="action-item" onClick={() => navigate('/customers')}>
+          <button className="action-item" onClick={() => navigate('/bookings/history')}>
             <div className="action-icon"><UserPlus size={20} /></div>
             <span>Add Customer</span>
           </button>
-           <button className="action-item" onClick={() => navigate('/modify')}>
+           <button className="action-item" onClick={() => navigate('/bookings/history')}>
             <div className="action-icon"><FileText size={20} /></div>
             <span>Modify Booking</span>
           </button>
@@ -248,7 +255,7 @@ const Dashboard = () => {
                   <tr>
                     <th>ID</th>
                     <th>Customer</th>
-                    <th>Type</th>
+                    <th>Vehicle</th>
                     <th>Amount</th>
                     <th>Status</th>
                   </tr>
@@ -257,8 +264,8 @@ const Dashboard = () => {
                   {recentBookings.length > 0 ? recentBookings.slice(0, 5).map((bk, i) => (
                     <tr key={bk.id || i}>
                       <td className="bk-id">{bk.bookingId || bk.id}</td>
-                      <td>{bk.customerName || 'N/A'}</td>
-                      <td>{bk.serviceType || 'Standard'}</td>
+                      <td>{bk.customer?.name || bk.customerName || 'N/A'}</td>
+                      <td>{bk.vehicleType || bk.serviceType || 'Standard'}</td>
                       <td className="bk-amount">₹{bk.amount?.toLocaleString()}</td>
                       <td>
                         <span className="v3-status-pill" style={{ 

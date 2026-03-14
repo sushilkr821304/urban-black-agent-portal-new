@@ -1,80 +1,206 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutGrid, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import api from '../services/api';
+import toast from 'react-hot-toast';
 
-const Schedule = () => {
+// Components
+import ScheduleFilters from '../components/Schedule/ScheduleFilters';
+import ScheduleSearchBar from '../components/Schedule/ScheduleSearchBar';
+import ScheduleTable from '../components/Schedule/ScheduleTable';
+import ScheduleCalendar from '../components/Schedule/ScheduleCalendar';
+import TripDetailsModal from '../components/Schedule/TripDetailsModal';
+
+const SchedulePage = () => {
   const [view, setView] = useState('list'); // 'calendar' or 'list'
+  const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filter, setFilter] = useState('All Trips');
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize] = useState(10);
+
+  // Modal
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchTrips = useCallback(async () => {
+    setLoading(true);
+    try {
+      let endpoint = '/schedule';
+      const params = {
+        page: currentPage,
+        size: pageSize
+      };
+
+      if (searchTerm) {
+        endpoint = '/schedule/search';
+        params.q = searchTerm;
+      } else if (filter === 'Today') {
+        endpoint = '/schedule/today';
+      } else if (filter === 'Upcoming') {
+        endpoint = '/schedule/upcoming';
+      } else if (filter === 'Completed') {
+        endpoint = '/schedule/completed';
+      } else if (filter !== 'All Trips') {
+        params.status = filter;
+      }
+
+      const { data } = await api.get(endpoint, { params });
+      setTrips(data.content || []);
+      setTotalPages(data.totalPages || 0);
+    } catch (err) {
+      console.error('Error fetching schedule:', err);
+      toast.error('Failed to load schedule data');
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, pageSize, filter, searchTerm]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchTrips();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [fetchTrips]);
+
+  const handleDateClick = async (date) => {
+    setLoading(true);
+    try {
+      const dateStr = date.toISOString().split('T')[0];
+      const { data } = await api.get('/schedule', {
+        params: { date: dateStr, page: 0, size: 50 }
+      });
+      setTrips(data.content || []);
+      setView('list'); // Switch to list view to see the results
+    } catch (err) {
+      toast.error('Error fetching trips for selected date');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openDetails = (trip) => {
+    setSelectedTrip(trip);
+    setIsModalOpen(true);
+  };
 
   return (
-    <div className="page-container">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="page-container" style={{ maxWidth: '1400px' }}>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
         <div>
-          <h1 className="page-title">Upcoming Schedule</h1>
-          <p className="page-subtitle">Punctuality is premium. Here are your jobs for the week.</p>
+          <h1 className="page-title">Trip Schedule</h1>
+          <p className="page-subtitle">Punctuality is premium. Monitor all your assigned trips and bookings.</p>
         </div>
-        <div style={{ display: 'flex', background: '#F3F4F6', borderRadius: '8px', padding: '4px' }}>
+        
+        <div style={{ display: 'flex', background: '#F1F5F9', borderRadius: '12px', padding: '4px' }}>
           <button 
-            style={{ padding: '8px 16px', border: 'none', background: view === 'list' ? 'white' : 'transparent', borderRadius: '6px', fontSize: '14px', fontWeight: '500', boxShadow: view === 'list' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', color: view === 'list' ? 'var(--primary)' : 'var(--text-muted)' }}
             onClick={() => setView('list')}
+            style={{ 
+              display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', border: 'none', 
+              background: view === 'list' ? 'white' : 'transparent', borderRadius: '8px', 
+              fontSize: '14px', fontWeight: '700', cursor: 'pointer',
+              color: view === 'list' ? 'var(--primary)' : 'var(--text-muted)',
+              boxShadow: view === 'list' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
+            }}
           >
-            List View
+            <LayoutGrid size={18} /> Table
           </button>
           <button 
-            style={{ padding: '8px 16px', border: 'none', background: view === 'calendar' ? 'white' : 'transparent', borderRadius: '6px', fontSize: '14px', fontWeight: '500', boxShadow: view === 'calendar' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none', color: view === 'calendar' ? 'var(--primary)' : 'var(--text-muted)' }}
             onClick={() => setView('calendar')}
+            style={{ 
+              display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', border: 'none', 
+              background: view === 'calendar' ? 'white' : 'transparent', borderRadius: '8px', 
+              fontSize: '14px', fontWeight: '700', cursor: 'pointer',
+              color: view === 'calendar' ? 'var(--primary)' : 'var(--text-muted)',
+              boxShadow: view === 'calendar' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
+            }}
           >
-            Calendar
+            <CalendarIcon size={18} /> Calendar
           </button>
         </div>
       </div>
 
-      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="premium-card">
-        {view === 'list' ? (
-          <div>
-            <div style={{ paddingBottom: '16px', borderBottom: '1px solid var(--border-color)', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ margin: 0, fontSize: '16px' }}>March 2026</h2>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'white' }}>&larr; Prev</button>
-                <button style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'white' }}>Next &rarr;</button>
-              </div>
-            </div>
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="premium-card" style={{ padding: '0' }}>
+        
+        {/* Filters & Search Toolbar */}
+        <div style={{ padding: '24px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+          <ScheduleFilters activeFilter={filter} onFilterChange={(f) => { setFilter(f); setCurrentPage(0); }} />
+          <ScheduleSearchBar value={searchTerm} onChange={(v) => { setSearchTerm(v); setCurrentPage(0); }} />
+        </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {[
-                { date: '14', day: 'Wed', time: '10:00 AM - 11:30 AM', title: 'Airport Pickup - Terminal 2', cx: 'Rahul Sharma', cat: 'Luxury SUV' },
-                { date: '15', day: 'Thu', time: '02:00 PM - 05:00 PM', title: 'City Tour - South Mumbai', cx: 'Priya Singh', cat: 'Premium Sedan' },
-                { date: '17', day: 'Sat', time: '08:00 AM - 08:00 PM', title: 'Outstation - Lonavala', cx: 'Amit Kumar', cat: 'Luxury Van' }
-              ].map((job, i) => (
-                <div key={i} style={{ display: 'flex', gap: '24px' }}>
-                  <div style={{ width: '80px', flexShrink: 0, textAlign: 'center' }}>
-                    <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: '600' }}>{job.day}</p>
-                    <p style={{ margin: 0, fontSize: '32px', fontWeight: 'bold', color: 'var(--primary)' }}>{job.date}</p>
-                  </div>
-                  
-                  <div style={{ flex: 1, borderLeft: '4px solid var(--primary)', paddingLeft: '20px', paddingBottom: '24px', borderBottom: i === 2 ? 'none' : '1px solid var(--border-color)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--accent)', padding: '2px 8px', background: 'rgba(236, 72, 153, 0.1)', borderRadius: '12px' }}>{job.time}</span>
-                        <h3 style={{ margin: '12px 0 8px 0', fontSize: '18px' }}>{job.title}</h3>
-                        <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-muted)' }}>Passenger: <b>{job.cx}</b> • Service: <b>{job.cat}</b></p>
-                      </div>
-                      <button className="btn-outline" style={{ padding: '8px 16px', fontSize: '13px' }}>View Details</button>
-                    </div>
-                  </div>
+        {/* Dynamic Content */}
+        {view === 'list' ? (
+          <>
+            <ScheduleTable trips={trips} loading={loading} onView={openDetails} />
+            
+            {/* Pagination Footer */}
+            {totalPages > 0 && (
+              <div style={{ padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', background: '#F8F9FC' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '600' }}>
+                  Showing Page {currentPage + 1} of {totalPages}
+                </span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    className="pagination-btn" 
+                    disabled={currentPage === 0} 
+                    onClick={() => setCurrentPage(p => p - 1)}
+                  >
+                    <ChevronLeft size={18} /> Previous
+                  </button>
+                  <button 
+                    className="pagination-btn" 
+                    disabled={currentPage >= totalPages - 1} 
+                    onClick={() => setCurrentPage(p => p + 1)}
+                  >
+                    Next <ChevronRight size={18} />
+                  </button>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            )}
+          </>
         ) : (
-          <div style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FAFAFB', border: '1px dashed var(--border-color)', borderRadius: '12px' }}>
-            <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: '48px', opacity: 0.5 }}>📅</span>
-              <p style={{ color: 'var(--text-muted)', marginTop: '16px' }}>Calendar UI rendering here (e.g., using FullCalendar)...</p>
-            </div>
-          </div>
+          <ScheduleCalendar trips={trips} onDateClick={handleDateClick} />
         )}
       </motion.div>
+
+      {/* Trip Details Modal */}
+      <TripDetailsModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        trip={selectedTrip} 
+      />
+
+      <style>{`
+        .pagination-btn {
+          padding: 8px 16px;
+          border-radius: 10px;
+          border: 1px solid #E2E8F0;
+          background: white;
+          font-size: 13px;
+          font-weight: 700;
+          color: #64748B;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.2s;
+        }
+        .pagination-btn:hover:not(:disabled) {
+          border-color: var(--primary);
+          color: var(--primary);
+          background: #F5F3FF;
+        }
+        .pagination-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      `}</style>
     </div>
   );
 };
 
-export default Schedule;
+export default SchedulePage;

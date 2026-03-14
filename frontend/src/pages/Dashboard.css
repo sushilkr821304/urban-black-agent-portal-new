@@ -43,6 +43,14 @@
   border-radius: 16px;
 }
 
+.banner-avatar-initials {
+  font-size: 22px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
 .welcome-text {
   font-size: 28px;
   font-weight: 800;
