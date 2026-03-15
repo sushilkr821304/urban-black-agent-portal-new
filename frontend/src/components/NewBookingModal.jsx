@@ -37,14 +37,17 @@ const NewBookingModal = ({ isOpen, onClose, onSuccess }) => {
           phone: formData.customerPhone,
           email: formData.customerEmail
         },
+        customerName: formData.customerName,
+        customerPhone: formData.customerPhone,
         pickupLocation: formData.pickupLocation,
         dropLocation: formData.dropLocation,
         tripDate: tripDateTime,
+        tripTime: formData.tripTime,
         vehicleType: formData.vehicleType,
         passengersCount: parseInt(formData.passengersCount),
         amount: parseFloat(formData.amount),
         specialNotes: formData.specialNotes,
-        status: 'Upcoming',
+        status: 'NEW',
         paymentStatus: 'Pending'
       };
 

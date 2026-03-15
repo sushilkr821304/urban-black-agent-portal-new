@@ -30,11 +30,11 @@ public class ScheduleService {
     }
 
     public Page<Booking> getUpcomingTrips(Long agentId, Pageable pageable) {
-        return bookingRepository.findByAgentIdAndStatus(agentId, "Upcoming", pageable);
+        return bookingRepository.findByAgentIdAndStatus(agentId, "NEW", pageable);
     }
 
     public Page<Booking> getCompletedTrips(Long agentId, Pageable pageable) {
-        return bookingRepository.findByAgentIdAndStatus(agentId, "Completed", pageable);
+        return bookingRepository.findByAgentIdAndStatus(agentId, "COMPLETED", pageable);
     }
 
     public Page<Booking> searchTrips(Long agentId, String query, Pageable pageable) {

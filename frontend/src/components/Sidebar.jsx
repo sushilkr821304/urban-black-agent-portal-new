@@ -16,7 +16,9 @@ import {
   FileText,
   HelpCircle,
   ShieldCheck,
-  FileCheck
+  FileCheck,
+  BookOpen,
+  UserCheck
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -33,17 +35,17 @@ const Sidebar = ({ isOpen, onToggle }) => {
       icon: <ShieldCheck size={20} />, 
       isSubmenu: true, 
       subItems: [
-        { name: 'KYC Verification', icon: <FileCheck size={18} />, path: '/kyc' },
-        { name: 'Profile Details', icon: <User size={18} />, path: '/profile' }
+        { name: 'KYC Verification', icon: <FileCheck size={18} />, path: '/kyc' }
       ] 
     },
     { name: 'Bookings', icon: <CalendarCheck size={20} />, path: '/bookings/history' },
     { name: 'Schedule', icon: <Calendar size={20} />, path: '/schedule' },
     { name: 'Customers', icon: <UserPlus size={20} />, path: '/customers' },
+    { name: 'Drivers', icon: <UserCheck size={20} />, path: '/drivers' },
     { name: 'Wallet', icon: <Wallet size={20} />, path: '/wallet' },
+    { name: 'Passbook', icon: <BookOpen size={20} />, path: '/passbook' },
     { name: 'Earnings', icon: <CircleDollarSign size={20} />, path: '/earnings' },
     { name: 'Reports', icon: <FileText size={20} />, path: '/reports' },
-    { name: 'Support', icon: <HelpCircle size={20} />, path: '/support' },
   ];
 
   const bottomItems = [

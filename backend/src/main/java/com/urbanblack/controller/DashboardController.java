@@ -57,22 +57,6 @@ public class DashboardController {
 
     @GetMapping("/analytics")
     public ResponseEntity<Map<String, Object>> getAnalytics() {
-        Agent agent = getCurrentAgent();
-        DashboardStatsResponse stats = dashboardService.getStats(agent);
-        
-        Map<String, Object> analytics = new HashMap<>();
-        
-        // Booking Distribution
-        Map<String, Long> distribution = new HashMap<>();
-        distribution.put("Completed", stats.getCompletedBookings());
-        distribution.put("Pending", stats.getPendingBookings());
-        distribution.put("Cancelled", stats.getCancelledBookings());
-        analytics.put("distribution", distribution);
-        
-        // Mock Revenue Data (Weekly/Monthly)
-        analytics.put("revenueLabels", List.of("Jan", "Feb", "Mar", "Apr", "May", "Jun"));
-        analytics.put("revenueData", List.of(12000, 15000, 8000, 22000, 18000, 25000));
-        
-        return ResponseEntity.ok(analytics);
+        return ResponseEntity.ok(dashboardService.getAnalytics(getCurrentAgent()));
     }
 }

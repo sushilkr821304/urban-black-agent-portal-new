@@ -49,33 +49,17 @@ const Dashboard = () => {
       setAnalytics(analyticsRes.data);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
-      // Mock data for UI development if API is not fully ready
-      setStats({
-        walletBalance: balance || 501,
-        todayBookings: 8,
-        totalBookings: 245,
-        overallEarnings: 54000,
-        todayCommission: 350,
-        pendingBookings: 4,
-        completedBookings: 230,
-        cancelledBookings: 15
-      });
-      setRecentBookings([
-        { id: 'UB2345', customerName: 'Rahul', serviceType: 'Airport Drop', amount: 2400, status: 'Completed', date: '2026-03-13' },
-        { id: 'UB2346', customerName: 'Aman', serviceType: 'City Trip', amount: 1800, status: 'Pending', date: '2026-03-13' },
-      ]);
     } finally {
       setLoading(false);
     }
   };
 
   const statusColors = {
-    'Completed': { bg: 'rgba(16, 185, 129, 0.1)', text: '#10B981' },
-    'In Progress': { bg: 'rgba(59, 130, 246, 0.1)', text: '#3B82F6' },
-    'Upcoming': { bg: 'rgba(245, 158, 11, 0.1)', text: '#F59E0B' },
-    'Assigned': { bg: 'rgba(79, 70, 229, 0.1)', text: '#4F46E5' },
-    'Pending': { bg: 'rgba(245, 158, 11, 0.1)', text: '#F59E0B' },
-    'Cancelled': { bg: 'rgba(239, 68, 68, 0.1)', text: '#EF4444' }
+    'COMPLETED': { bg: 'rgba(16, 185, 129, 0.1)', text: '#10B981' },
+    'IN_PROGRESS': { bg: 'rgba(59, 130, 246, 0.1)', text: '#3B82F6' },
+    'NEW': { bg: 'rgba(245, 158, 11, 0.1)', text: '#F59E0B' },
+    'ASSIGNED': { bg: 'rgba(79, 70, 229, 0.1)', text: '#4F46E5' },
+    'CANCELLED': { bg: 'rgba(239, 68, 68, 0.1)', text: '#EF4444' }
   };
 
   if (loading && !stats) return <div className="loading-container">Loading Dashboard...</div>;
@@ -89,14 +73,10 @@ const Dashboard = () => {
   const revenueData = analytics?.revenueLabels?.map((label, i) => ({
     month: label,
     revenue: analytics.revenueData[i]
-  })) || [
-    { month: 'Jan', revenue: 12000 },
-    { month: 'Feb', revenue: 15000 },
-    { month: 'Mar', revenue: 8000 },
-    { month: 'Apr', revenue: 22000 },
-    { month: 'May', revenue: 18000 },
-    { month: 'Jun', revenue: 25000 },
-  ];
+  })) || [];
+
+  const isRevenueEmpty = !revenueData.length || revenueData.every(d => d.revenue === 0);
+  const isDistributionEmpty = distributionData.every(d => d.value === 0);
 
   return (
     <div className="dashboard-v3">
@@ -288,47 +268,63 @@ const Dashboard = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
             <div className="premium-card-v3">
               <h3 className="card-title">Booking Distribution</h3>
-              <div style={{ height: '220px', width: '100%', marginTop: '20px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={distributionData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {distributionData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+              <div style={{ height: '220px', width: '100%', marginTop: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                {!isDistributionEmpty ? (
+                  <>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={distributionData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={80}
+                          paddingAngle={5}
+                          dataKey="value"
+                        >
+                          {distributionData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="chart-legend-v3">
+                      {distributionData.map(d => (
+                        <div key={d.name} className="legend-item">
+                          <span className="dot" style={{ background: d.color }}></span>
+                          <span>{d.name}</span>
+                        </div>
                       ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="chart-legend-v3">
-                  {distributionData.map(d => (
-                    <div key={d.name} className="legend-item">
-                      <span className="dot" style={{ background: d.color }}></span>
-                      <span>{d.name}</span>
                     </div>
-                  ))}
-                </div>
+                  </>
+                ) : (
+                  <div className="empty-chart-state">
+                    <AlertTriangle size={32} style={{ opacity: 0.2, marginBottom: '12px' }} />
+                    <p style={{ fontSize: '14px', color: 'var(--text-muted)', textAlign: 'center' }}>No booking data available yet.</p>
+                  </div>
+                )}
               </div>
             </div>
             <div className="premium-card-v3">
               <h3 className="card-title">Revenue Trend</h3>
-              <div style={{ height: '220px', width: '100%', marginTop: '20px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={revenueData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="month" fontSize={11} />
-                    <YAxis fontSize={11} />
-                    <Tooltip />
-                    <Bar dataKey="revenue" fill="var(--primary)" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+              <div style={{ height: '220px', width: '100%', marginTop: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                {!isRevenueEmpty ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={revenueData}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="month" fontSize={11} />
+                      <YAxis fontSize={11} />
+                      <Tooltip />
+                      <Bar dataKey="revenue" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="empty-chart-state">
+                    <TrendingUp size={32} style={{ opacity: 0.2, marginBottom: '12px' }} />
+                    <p style={{ fontSize: '14px', color: 'var(--text-muted)', textAlign: 'center' }}>No revenue data available yet. Create bookings to generate analytics.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -47,9 +47,10 @@ public class OtpService {
     private void sendSmsViaFast2Sms(String phoneNumber, String otp) {
         try {
             RestTemplate restTemplate = new RestTemplate();
-            
+
             // Build the URL properly with encoded query parameters
-            String url = org.springframework.web.util.UriComponentsBuilder.fromHttpUrl("https://www.fast2sms.com/dev/bulkV2")
+            String url = org.springframework.web.util.UriComponentsBuilder
+                    .fromHttpUrl("https://www.fast2sms.com/dev/bulkV2")
                     .queryParam("authorization", fast2SmsApiKey)
                     .queryParam("route", "q")
                     .queryParam("message", "Your Verification OTP is " + otp)

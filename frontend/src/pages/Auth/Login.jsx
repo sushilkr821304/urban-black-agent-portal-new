@@ -38,7 +38,7 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-content">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="auth-header"
@@ -50,23 +50,23 @@ const Login = () => {
             <div className="input-group">
               <div className="phone-input-wrapper">
                 <span className="country-code">🇮🇳 +91</span>
-                <input 
-                  type="text" 
-                  placeholder="Phone Number" 
+                <input
+                  type="text"
+                  placeholder="Phone Number"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  required 
+                  required
                 />
               </div>
             </div>
 
             <div className="input-group">
-              <input 
-                type="password" 
-                placeholder="Enter Password" 
+              <input
+                type="password"
+                placeholder="Enter Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required 
+                required
               />
             </div>
 

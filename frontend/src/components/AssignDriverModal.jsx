@@ -41,7 +41,7 @@ const AssignDriverModal = ({ isOpen, onClose, booking, onSuccess }) => {
     }
     setAssigning(true);
     try {
-      await api.put(`/bookings/assign-driver/${booking.id}?driverId=${selectedDriver.id}`);
+      await api.put(`/bookings/${booking.id}/assign-driver?driverId=${selectedDriver.id}`);
       toast.success(`Driver ${selectedDriver.driverName} assigned successfully!`);
       onSuccess();
       onClose();
@@ -141,8 +141,14 @@ const AssignDriverModal = ({ isOpen, onClose, booking, onSuccess }) => {
 
                     {/* Driver Info */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ margin: 0, fontWeight: '700', fontSize: '15px', color: '#0F172A' }}>{driver.driverName}</p>
-                      <div style={{ display: 'flex', gap: '12px', marginTop: '4px', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <p style={{ margin: 0, fontWeight: '700', fontSize: '15px', color: '#0F172A' }}>{driver.driverName}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#F59E0B', fontSize: '13px', fontWeight: '700' }}>
+                          ★ {driver.rating || 'N/A'}
+                        </div>
+                      </div>
+                      
+                      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '6px' }}>
                         <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Phone size={12} /> {driver.phone}
                         </span>
@@ -150,6 +156,10 @@ const AssignDriverModal = ({ isOpen, onClose, booking, onSuccess }) => {
                           <Car size={12} /> {driver.vehicleType}
                         </span>
                         <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600' }}>{driver.vehicleNumber}</span>
+                      </div>
+
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        📍 {driver.currentLocation || 'Unknown'}
                       </div>
                     </div>
 
@@ -162,11 +172,12 @@ const AssignDriverModal = ({ isOpen, onClose, booking, onSuccess }) => {
                     <span style={{
                       padding: '4px 10px',
                       borderRadius: '20px',
-                      fontSize: '11px',
+                      fontSize: '10px',
                       fontWeight: '800',
-                      background: '#DEF7EC',
-                      color: '#03543F',
-                      flexShrink: 0
+                      background: driver.status === 'AVAILABLE' ? '#DEF7EC' : '#FEF3C7',
+                      color: driver.status === 'AVAILABLE' ? '#03543F' : '#92400E',
+                      flexShrink: 0,
+                      textTransform: 'uppercase'
                     }}>
                       {driver.status}
                     </span>

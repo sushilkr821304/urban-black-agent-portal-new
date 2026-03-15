@@ -2,16 +2,16 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, User, Phone, MapPin, Calendar, Clock, Car, Users, CreditCard, Tag, Printer, Download, UserCheck } from 'lucide-react';
 
-const BookingDetailsModal = ({ isOpen, onClose, booking }) => {
+const BookingDetailsModal = ({ isOpen, onClose, booking, onAssignDriver }) => {
   if (!isOpen || !booking) return null;
 
   const getStatusStyle = (status) => {
     switch (status) {
-      case 'Completed': return { bg: '#DEF7EC', text: '#03543F' };
-      case 'In Progress': return { bg: '#E1EFFE', text: '#1E429F' };
-      case 'Upcoming': return { bg: '#FEF3C7', text: '#92400E' };
-      case 'Cancelled': return { bg: '#FDE8E8', text: '#9B1C1C' };
-      case 'Assigned': return { bg: '#E5EDFF', text: '#3F66D5' };
+      case 'COMPLETED': return { bg: '#DEF7EC', text: '#03543F' };
+      case 'IN_PROGRESS': return { bg: '#F5F3FF', text: '#7C3AED' }; // Purple
+      case 'NEW': return { bg: '#FEF3C7', text: '#92400E' }; // Yellow
+      case 'CANCELLED': return { bg: '#FDE8E8', text: '#9B1C1C' }; // Red
+      case 'ASSIGNED': return { bg: '#E1EFFE', text: '#1E429F' }; // Blue
       default: return { bg: '#F3F4F6', text: '#374151' };
     }
   };
@@ -132,10 +132,28 @@ const BookingDetailsModal = ({ isOpen, onClose, booking }) => {
             )}
 
             <div style={{ marginTop: '40px', display: 'flex', gap: '12px' }}>
-              <button className="btn-save" style={{ flex: 1 }}><Download size={18} /> Invoice</button>
-              <button className="btn-outline" style={{ flex: 1 }}><Printer size={18} /> Print</button>
-              {!booking.driver && booking.status !== 'Cancelled' && (
-                <button className="btn-primary" style={{ flex: 2, background: '#7C3AED' }}>Assign Driver</button>
+              <button 
+                className="btn-save" 
+                style={{ flex: 1 }}
+                onClick={() => window.open(`/api/bookings/invoice/${booking.id}`, '_blank')}
+              >
+                <Download size={18} /> Invoice
+              </button>
+              <button 
+                className="btn-outline" 
+                style={{ flex: 1 }}
+                onClick={() => window.print()}
+              >
+                <Printer size={18} /> Print
+              </button>
+              {!booking.driver && booking.status !== 'CANCELLED' && (
+                <button 
+                  className="btn-primary" 
+                  style={{ flex: 2, background: '#7C3AED' }}
+                  onClick={() => { onClose(); onAssignDriver(booking); }}
+                >
+                  <UserCheck size={18} /> Assign Driver
+                </button>
               )}
             </div>
           </div>

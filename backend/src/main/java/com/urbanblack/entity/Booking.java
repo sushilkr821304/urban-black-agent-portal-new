@@ -34,12 +34,19 @@ public class Booking {
 
     private String pickupLocation;
     private String dropLocation;
+    private String customerName;
+    private String customerPhone;
     private LocalDateTime tripDate;
+    private String tripTime;
     private String vehicleType;
     private String status; // Upcoming, Assigned, In Progress, Completed, Cancelled
     private Double amount;
+    private Double commissionAmount;
+    private Double agentEarning;
     private String paymentStatus; // Pending, Paid
     private Integer passengersCount;
+    private LocalDateTime tripStartedAt;
+    private LocalDateTime tripCompletedAt;
 
     @Column(length = 1000)
     private String specialNotes;
@@ -47,12 +54,4 @@ public class Booking {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Convenience methods for frontend if needed
-    public String getCustomerName() {
-        return customer != null ? customer.getName() : "N/A";
-    }
-
-    public String getCustomerPhone() {
-        return customer != null ? customer.getPhone() : "N/A";
-    }
 }

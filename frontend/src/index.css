@@ -33,8 +33,9 @@ body {
 
 /* Premium Page Layout Structure */
 .page-container {
-  max-width: 1200px;
+  max-width: 1600px; /* Increased from 1440px to give more space */
   margin: 0 auto;
+  padding: 0 40px; /* Increased padding */
   animation: fadeIn 0.4s ease-out;
 }
 
@@ -130,7 +131,7 @@ body {
   top: 0;
   left: 0;
   height: 100vh;
-  width: 280px !important;
+  width: 260px !important;
   z-index: 1000;
   flex-shrink: 0;
   transition: width 0.3s ease !important;
@@ -146,7 +147,7 @@ body {
   flex-direction: column;
   min-width: 0;
   min-height: 100vh;
-  margin-left: 280px !important;
+  margin-left: 260px !important;
   transition: margin-left 0.3s ease, width 0.3s ease !important;
 }
 

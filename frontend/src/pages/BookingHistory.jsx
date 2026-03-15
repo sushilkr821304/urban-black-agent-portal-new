@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, Plus, ChevronLeft, ChevronRight,
-  Eye, Trash2, UserCheck, Download, FileText
+  Eye, Trash2, UserCheck, Download, FileText,
+  Play, CheckCircle
 } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -68,13 +69,33 @@ const BookingHistory = () => {
     }
   };
 
+  const handleStartTrip = async (id) => {
+    try {
+      await api.put(`/bookings/start/${id}`);
+      toast.success('Trip started - In Progress');
+      fetchBookings();
+    } catch (err) {
+      toast.error('Failed to start trip');
+    }
+  };
+
+  const handleCompleteTrip = async (id) => {
+    try {
+      await api.put(`/bookings/complete/${id}`);
+      toast.success('Trip completed!');
+      fetchBookings();
+    } catch (err) {
+      toast.error('Failed to complete trip');
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Completed': return { bg: '#DEF7EC', text: '#03543F' };
-      case 'In Progress': return { bg: '#E1EFFE', text: '#1E429F' };
-      case 'Upcoming': return { bg: '#FEF3C7', text: '#92400E' };
-      case 'Cancelled': return { bg: '#FDE8E8', text: '#9B1C1C' };
-      case 'Assigned': return { bg: '#E5EDFF', text: '#3F66D5' };
+      case 'COMPLETED': return { bg: '#DEF7EC', text: '#03543F' };
+      case 'IN_PROGRESS': return { bg: '#F5F3FF', text: '#7C3AED' }; // Purple
+      case 'NEW': return { bg: '#FEF3C7', text: '#92400E' }; // Yellow
+      case 'CANCELLED': return { bg: '#FDE8E8', text: '#9B1C1C' }; // Red
+      case 'ASSIGNED': return { bg: '#E1EFFE', text: '#1E429F' }; // Blue
       default: return { bg: '#F3F4F6', text: '#374151' };
     }
   };
@@ -104,24 +125,31 @@ const BookingHistory = () => {
         {/* Toolbar */}
         <div style={{ padding: '24px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
           <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
-            {['All', 'Upcoming', 'Assigned', 'In Progress', 'Completed', 'Cancelled'].map(f => (
+            {[
+              { label: 'All', value: 'All' },
+              { label: 'Upcoming', value: 'NEW' },
+              { label: 'Assigned', value: 'ASSIGNED' },
+              { label: 'In Progress', value: 'IN_PROGRESS' },
+              { label: 'Completed', value: 'COMPLETED' },
+              { label: 'Cancelled', value: 'CANCELLED' }
+            ].map(f => (
               <button
-                key={f}
-                onClick={() => { setStatusFilter(f); setCurrentPage(0); }}
+                key={f.value}
+                onClick={() => { setStatusFilter(f.value); setCurrentPage(0); }}
                 style={{
                   padding: '10px 18px',
                   borderRadius: '12px',
-                  border: statusFilter === f ? 'transparent' : '1px solid var(--border-color)',
-                  background: statusFilter === f ? 'var(--primary)' : 'white',
-                  color: statusFilter === f ? 'white' : 'var(--text-muted)',
+                  border: statusFilter === f.value ? 'transparent' : '1px solid var(--border-color)',
+                  background: statusFilter === f.value ? 'var(--primary)' : 'white',
+                  color: statusFilter === f.value ? 'white' : 'var(--text-muted)',
                   fontSize: '13px',
                   fontWeight: '700',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.2s',
-                  boxShadow: statusFilter === f ? '0 4px 12px rgba(108, 43, 217, 0.2)' : 'none'
+                  boxShadow: statusFilter === f.value ? '0 4px 12px rgba(108, 43, 217, 0.2)' : 'none'
                 }}
               >
-                {f}
+                {f.label}
               </button>
             ))}
           </div>
@@ -185,8 +213,8 @@ const BookingHistory = () => {
                     </td>
                     <td style={{ padding: '20px 24px' }}>
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontWeight: '700', color: 'var(--text-main)', fontSize: '14px' }}>{bk.customer?.name}</span>
-                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{bk.customer?.phone}</span>
+                        <span style={{ fontWeight: '700', color: 'var(--text-main)', fontSize: '14px' }}>{bk.customerName || bk.customer?.name}</span>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{bk.customerPhone || bk.customer?.phone}</span>
                       </div>
                     </td>
                     <td style={{ padding: '20px 24px' }}>
@@ -224,7 +252,30 @@ const BookingHistory = () => {
                     <td style={{ padding: '20px 24px', textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                         <button className="icon-btn-v3" title="View Details" onClick={() => { setSelectedBooking(bk); setIsDetailsModalOpen(true); }}><Eye size={16} /></button>
-                        {!bk.driver && bk.status !== 'Cancelled' && bk.status !== 'Completed' && (
+                        
+                        {bk.status === 'ASSIGNED' && (
+                          <button 
+                            className="icon-btn-v3" 
+                            title="Start Trip" 
+                            style={{ color: '#0ea5e9' }}
+                            onClick={() => handleStartTrip(bk.id)}
+                          >
+                            <Play size={16} />
+                          </button>
+                        )}
+
+                        {bk.status === 'IN_PROGRESS' && (
+                          <button 
+                            className="icon-btn-v3" 
+                            title="Complete Trip" 
+                            style={{ color: '#10b981' }}
+                            onClick={() => handleCompleteTrip(bk.id)}
+                          >
+                            <CheckCircle size={16} />
+                          </button>
+                        )}
+
+                        {!bk.driver && bk.status === 'NEW' && (
                           <button
                             className="icon-btn-v3"
                             title="Assign Driver"
@@ -234,7 +285,7 @@ const BookingHistory = () => {
                             <UserCheck size={16} />
                           </button>
                         )}
-                        {bk.status !== 'Cancelled' && bk.status !== 'Completed' && (
+                        {bk.status !== 'CANCELLED' && bk.status !== 'COMPLETED' && (
                           <button className="icon-btn-v3" title="Cancel Booking" style={{ color: '#EF4444' }} onClick={() => handleCancelBooking(bk.id)}><Trash2 size={16} /></button>
                         )}
                       </div>
@@ -283,6 +334,7 @@ const BookingHistory = () => {
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
         booking={selectedBooking}
+        onAssignDriver={(bk) => { setAssignTarget(bk); setIsAssignModalOpen(true); }}
       />
 
       <AssignDriverModal

@@ -37,9 +37,9 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post('/auth/verify-otp', { 
+      await api.post('/auth/verify-otp', {
         phoneNumber: formData.phoneNumber,
-        otp: formData.otp 
+        otp: formData.otp
       });
       setStep(3);
     } catch (err) {
@@ -56,7 +56,7 @@ const Signup = () => {
     }
     setLoading(true);
     try {
-      await api.post('/auth/signup', { 
+      await api.post('/auth/signup', {
         phoneNumber: formData.phoneNumber,
         password: formData.password
       });
@@ -75,7 +75,7 @@ const Signup = () => {
         <div className="auth-content">
           <AnimatePresence mode="wait">
             {step === 1 && (
-              <motion.div 
+              <motion.div
                 key="step1"
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -88,12 +88,12 @@ const Signup = () => {
                 <form onSubmit={handleSendOtp} className="auth-form">
                   <div className="phone-input-wrapper">
                     <span className="country-code">🇮🇳 +91</span>
-                    <input 
-                      type="text" 
-                      placeholder="Phone Number" 
+                    <input
+                      type="text"
+                      placeholder="Phone Number"
                       value={formData.phoneNumber}
-                      onChange={(e) => setFormData({...formData, phoneNumber: e.target.value.replace(/\D/g, '').slice(0, 10)})}
-                      required 
+                      onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                      required
                     />
                   </div>
                   <button type="submit" className="auth-btn" disabled={loading}>
@@ -107,7 +107,7 @@ const Signup = () => {
             )}
 
             {step === 2 && (
-              <motion.div 
+              <motion.div
                 key="step2"
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -118,13 +118,13 @@ const Signup = () => {
                   <p>Enter the 6-digit code sent to +91 ******{formData.phoneNumber.slice(-4)}</p>
                 </div>
                 <form onSubmit={handleVerifyOtp} className="auth-form">
-                  <input 
-                    type="text" 
-                    placeholder="Enter OTP" 
+                  <input
+                    type="text"
+                    placeholder="Enter OTP"
                     value={formData.otp}
-                    onChange={(e) => setFormData({...formData, otp: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
                     maxLength={6}
-                    required 
+                    required
                   />
                   <button type="submit" className="auth-btn" disabled={loading}>
                     {loading ? 'Verifying...' : 'Verify OTP'}
@@ -137,7 +137,7 @@ const Signup = () => {
             )}
 
             {step === 3 && (
-              <motion.div 
+              <motion.div
                 key="step3"
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -148,19 +148,19 @@ const Signup = () => {
                   <p>Create a strong password for your account</p>
                 </div>
                 <form onSubmit={handleCreatePassword} className="auth-form">
-                  <input 
-                    type="password" 
-                    placeholder="Create Password" 
+                  <input
+                    type="password"
+                    placeholder="Create Password"
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
-                    required 
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required
                   />
-                  <input 
-                    type="password" 
-                    placeholder="Confirm Password" 
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
                     value={formData.confirmPassword}
-                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                    required 
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    required
                   />
                   <button type="submit" className="auth-btn" disabled={loading}>
                     {loading ? 'Creating...' : 'Finish Signup'}

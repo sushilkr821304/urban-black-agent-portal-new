@@ -22,13 +22,13 @@ public class DriverController {
 
     @GetMapping("/available")
     public ResponseEntity<List<Driver>> getAvailableDrivers() {
-        return ResponseEntity.ok(driverRepository.findByStatus("Available"));
+        return ResponseEntity.ok(driverRepository.findByStatus("AVAILABLE"));
     }
 
     @PostMapping
     public ResponseEntity<Driver> addDriver(@RequestBody Driver driver) {
         if (driver.getStatus() == null)
-            driver.setStatus("Available");
+            driver.setStatus("AVAILABLE");
         return ResponseEntity.ok(driverRepository.save(driver));
     }
 

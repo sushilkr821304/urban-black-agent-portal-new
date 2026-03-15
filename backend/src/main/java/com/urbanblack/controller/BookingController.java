@@ -117,7 +117,7 @@ public class BookingController {
     }
 
     // Assign driver
-    @PutMapping("/assign-driver/{id}")
+    @PutMapping("/{id}/assign-driver")
     public ResponseEntity<?> assignDriver(
             @PathVariable Long id,
             @RequestParam Long driverId,
@@ -145,6 +145,20 @@ public class BookingController {
                         user.getAgent().getId()));
     }
 
+    // Start Trip
+    @PutMapping("/start/{id}")
+    public ResponseEntity<?> startTrip(@PathVariable Long id, Authentication authentication) {
+        User user = userRepository.findByPhoneNumber(authentication.getName()).orElseThrow();
+        return ResponseEntity.ok(bookingService.startTrip(id, user.getAgent().getId()));
+    }
+
+    // Complete Trip
+    @PutMapping("/complete/{id}")
+    public ResponseEntity<?> completeTrip(@PathVariable Long id, Authentication authentication) {
+        User user = userRepository.findByPhoneNumber(authentication.getName()).orElseThrow();
+        return ResponseEntity.ok(bookingService.completeTrip(id, user.getAgent().getId()));
+    }
+
     // Export CSV
     @GetMapping("/export-csv")
     public ResponseEntity<byte[]> exportCsv(Authentication authentication) {
@@ -157,18 +171,19 @@ public class BookingController {
                 LocalDateTime.now().minusYears(1));
 
         StringBuilder csv = new StringBuilder();
-        csv.append("Booking ID,Customer,Phone,Pickup,Drop,Date,Status,Amount\n");
+        csv.append("Booking ID,Customer,Pickup,Drop,Trip Date,Status,Amount,Driver Name\n");
 
         for (Booking b : allBookings) {
-            csv.append(String.format("%s,%s,%s,%s,%s,%s,%s,%.2f\n",
+            String driverName = b.getDriver() != null ? b.getDriver().getDriverName() : "N/A";
+            csv.append(String.format("%s,%s,%s,%s,%s,%s,%.2f,%s\n",
                     b.getBookingId(),
                     b.getCustomerName(),
-                    b.getCustomerPhone(),
                     b.getPickupLocation(),
                     b.getDropLocation(),
                     b.getTripDate(),
                     b.getStatus(),
-                    b.getAmount()));
+                    b.getAmount(),
+                    driverName));
         }
 
         byte[] csvBytes = csv.toString().getBytes();
@@ -177,5 +192,17 @@ public class BookingController {
                 .header("Content-Disposition", "attachment; filename=bookings.csv")
                 .header("Content-Type", "text/csv")
                 .body(csvBytes);
+    }
+
+    // Get Invoice
+    @GetMapping("/invoice/{id}")
+    public ResponseEntity<byte[]> getInvoice(@PathVariable Long id, Authentication authentication) {
+        User user = userRepository.findByPhoneNumber(authentication.getName()).orElseThrow();
+        byte[] pdfBytes = bookingService.generateInvoice(id);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=invoice-" + id + ".pdf")
+                .header("Content-Type", "application/pdf")
+                .body(pdfBytes);
     }
 }

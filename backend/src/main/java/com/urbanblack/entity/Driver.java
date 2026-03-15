@@ -20,7 +20,9 @@ public class Driver {
     private String phone;
     private String vehicleNumber;
     private String vehicleType;
-    private String status; // Available, On Trip, Offline
+    private Double rating;
+    private String currentLocation;
+    private String status; // AVAILABLE, BUSY, OFFLINE
 
     @JsonIgnore
     @OneToMany(mappedBy = "driver")

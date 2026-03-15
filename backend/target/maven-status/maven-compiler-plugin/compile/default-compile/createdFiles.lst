@@ -1,4 +1,5 @@
 com\urbanblack\entity\OtpVerification$OtpVerificationBuilder.class
+com\urbanblack\service\PassbookService.class
 com\urbanblack\entity\WalletTransaction$WalletTransactionBuilder.class
 com\urbanblack\repository\WalletTransactionRepository.class
 com\urbanblack\controller\DashboardController.class
@@ -11,6 +12,7 @@ com\urbanblack\controller\CustomerController.class
 com\urbanblack\dto\PaymentOrderResponse.class
 com\urbanblack\dto\EarningsSummaryDTO.class
 com\urbanblack\entity\Wallet.class
+com\urbanblack\controller\ReportsController.class
 com\urbanblack\repository\WalletRepository.class
 com\urbanblack\service\RazorpayService.class
 com\urbanblack\controller\AgentController.class
@@ -25,6 +27,8 @@ com\urbanblack\entity\PaymentTransaction$PaymentTransactionBuilder.class
 com\urbanblack\entity\Wallet$WalletBuilder.class
 com\urbanblack\service\CloudinaryService.class
 com\urbanblack\repository\CustomerRepository.class
+com\urbanblack\dto\PassbookSummaryDTO$PassbookSummaryDTOBuilder.class
+com\urbanblack\dto\ReportSummaryDTO$ReportSummaryDTOBuilder.class
 com\urbanblack\repository\ActivityLogRepository.class
 com\urbanblack\entity\Customer.class
 com\urbanblack\entity\Agent$AgentBuilder.class
@@ -34,9 +38,7 @@ com\urbanblack\service\OtpService.class
 com\urbanblack\dto\PaymentVerificationRequest.class
 com\urbanblack\entity\KYC$KYCBuilder.class
 com\urbanblack\service\ScheduleService.class
-com\urbanblack\dto\EarningsChartDTO$EarningsChartDTOBuilder.class
 com\urbanblack\repository\OtpVerificationRepository.class
-com\urbanblack\dto\EarningsChartDTO.class
 com\urbanblack\dto\DashboardStatsResponse$DashboardStatsResponseBuilder.class
 com\urbanblack\dto\PaymentOrderResponse$PaymentOrderResponseBuilder.class
 com\urbanblack\dto\PaymentOrderRequest.class
@@ -53,6 +55,8 @@ com\urbanblack\service\CustomerService.class
 com\urbanblack\entity\Agent.class
 com\urbanblack\service\BookingService.class
 com\urbanblack\config\CloudinaryConfig.class
+com\urbanblack\service\ReportService.class
+com\urbanblack\controller\PassbookController.class
 com\urbanblack\controller\KYCController.class
 com\urbanblack\service\EarningsService.class
 com\urbanblack\dto\DashboardStatsResponse.class
@@ -66,8 +70,10 @@ com\urbanblack\controller\EarningsController.class
 com\urbanblack\controller\ScheduleController.class
 com\urbanblack\entity\PaymentTransaction.class
 com\urbanblack\controller\AuthController.class
+com\urbanblack\dto\PassbookSummaryDTO.class
 com\urbanblack\entity\User$UserBuilder.class
 com\urbanblack\controller\AdminController.class
+com\urbanblack\dto\ReportSummaryDTO.class
 com\urbanblack\controller\DriverController.class
 com\urbanblack\repository\KYCRepository.class
 com\urbanblack\repository\UserRepository.class

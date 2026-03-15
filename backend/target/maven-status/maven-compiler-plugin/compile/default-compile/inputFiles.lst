@@ -4,7 +4,6 @@ C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblac
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\BookingController.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\AdminController.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\service\OtpService.java
-C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\dto\EarningsChartDTO.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\service\RazorpayService.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\config\WebSecurityConfig.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\PaymentController.java
@@ -24,6 +23,7 @@ C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblac
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\security\JwtUtils.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\AgentController.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\service\DashboardService.java
+C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\service\PassbookService.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\dto\LoginRequest.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\repository\KYCRepository.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\EarningsController.java
@@ -43,12 +43,16 @@ C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblac
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\entity\User.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\repository\AgentRepository.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\entity\KYC.java
+C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\dto\ReportSummaryDTO.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\dto\CustomerDTO.java
+C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\PassbookController.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\service\ScheduleService.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\repository\WalletTransactionRepository.java
+C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\service\ReportService.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\entity\Agent.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\KYCController.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\repository\DriverRepository.java
+C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\dto\PassbookSummaryDTO.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\dto\DashboardStatsResponse.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\entity\Booking.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\service\BookingService.java
@@ -58,3 +62,4 @@ C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblac
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\entity\WalletTransaction.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\repository\PaymentTransactionRepository.java
 C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\repository\WalletRepository.java
+C:\Users\HP\Desktop\urban-black-agent-portal\backend\src\main\java\com\urbanblack\controller\ReportsController.java

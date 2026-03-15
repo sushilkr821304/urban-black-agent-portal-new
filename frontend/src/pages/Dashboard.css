@@ -1,9 +1,11 @@
-/* Dashbord V3 - SAE Style */
 .dashboard-v3 {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
   padding-bottom: 40px;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Agent Banner */
@@ -105,8 +107,8 @@
 /* Stats Cards */
 .stats-grid-v3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
 }
 
 .stat-card-v3 {
@@ -317,13 +319,13 @@
 .dashboard-main-content {
   display: grid;
   grid-template-columns: 1.8fr 1fr;
-  gap: 24px;
+  gap: 28px;
 }
 
 .content-left, .content-right {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 /* Premium Card V3 */
@@ -533,4 +535,21 @@
     align-items: flex-start;
     gap: 24px;
   }
+}
+
+.empty-chart-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  background: #F9FAFB;
+}
+
+.empty-chart-state p {
+  margin: 0;
+  max-width: 200px;
 }

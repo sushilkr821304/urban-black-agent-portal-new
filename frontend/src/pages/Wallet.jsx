@@ -34,7 +34,7 @@ const Wallet = () => {
 
     try {
       const order = await createPaymentOrder(parseFloat(amount));
-      
+
       const options = {
         key: "rzp_test_SQbnlhk9jtL3LE", // Test Key from application.properties
         amount: order.amount * 100, // Amount in paise
@@ -49,7 +49,7 @@ const Wallet = () => {
               razorpayPaymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature
             };
-            
+
             const verificationResult = await verifyPaymentSignature(verificationData);
             if (verificationResult.status === 'SUCCESS') {
               toast.success('Payment successful! Balance updated.');
@@ -97,7 +97,7 @@ const Wallet = () => {
             <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', color: 'rgba(255,255,255,0.8)' }}>Available Balance</h3>
             <p style={{ margin: 0, fontSize: '48px', fontWeight: 'bold' }}>₹ {balance.toLocaleString()}</p>
           </div>
-          
+
           <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <button className="btn-primary" style={{ background: 'white', color: 'var(--primary)' }} onClick={handleAddMoney}>Add Money</button>
             <button className="btn-outline" style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'white' }}>Withdraw to Bank</button>
